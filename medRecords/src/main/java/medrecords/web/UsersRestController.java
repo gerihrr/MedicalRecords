@@ -2,6 +2,9 @@ package medrecords.web;
 
 import medrecords.dao.DoctorRepository;
 import medrecords.dao.PatientRepository;
+import medrecords.domain.DoctorService;
+import medrecords.domain.PatientService;
+import medrecords.domain.impl.DoctorImpl;
 import medrecords.dto.ErrorResponse;
 import medrecords.exception.InvalidEntityDataException;
 import medrecords.exception.NonexisitingEntityException;
@@ -12,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.Doc;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,70 +29,80 @@ public class UsersRestController {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Autowired
+    private DoctorService doctorService;
+
+    @Autowired
+    private PatientService patientService;
+
     @GetMapping("/doctors")
     public List<Doctor> getAllDoctors() {
-        return doctorRepository.findAll();
+        return doctorService.findAllDoctors();
     }
 
-    @GetMapping("/doctors/{id}")
+    @GetMapping("/doctors/count")
+    public long getCount() {
+        return doctorService.countDoctors();
+    }
+
+    @GetMapping("/doctors/{id:\\d+}")
     public Doctor getDoctorById(@PathVariable Long id) {
-        return doctorRepository.findById(id).orElseThrow(() -> new NonexisitingEntityException(
-                String.format("User with ID='%s' does not exist.", id)
-        ));
+    return doctorService.findDoctorById(id);
     }
 
     @PostMapping("/doctors")
     public Doctor createDoctor(@RequestBody Doctor doctor) {
-        return doctorRepository.create(doctor);
+        return doctorService.createDoctor(doctor);
     }
 
-    @PutMapping("/doctors/{id}")
-    public Optional<Doctor> updateDoctor(@PathVariable Long id, @RequestBody Doctor updated) {
+    @PutMapping("/doctors/{id:\\d+}")
+    public Doctor updateDoctor(@PathVariable Long id, @RequestBody Doctor updated) {
         if (!id.equals(updated.getId())) {
             throw new InvalidEntityDataException(
                     String.format("Non-matching IDs in path '%s' and in body '%s'", id, updated.getId())
             );
         }
-        return doctorRepository.update(updated);
+        return doctorService.updateDoctor(updated);
     }
 
-    @DeleteMapping("/doctors/{id}")
+    @DeleteMapping("/doctors/{id:\\d+}")
     public Doctor deleteDoctor(@PathVariable Long id) {
-        return doctorRepository.deleteById(id).orElseThrow(() -> new NonexisitingEntityException(
-                String.format("User with ID='%s' does not exist.", id)
-        ));
+        return doctorService.deleteDoctorById(id);
     }
 
     @GetMapping("/patients")
     public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
+        return patientService.findAllPatients();
     }
 
-    @GetMapping("/patients/{id}")
+    @GetMapping("/patients/count")
+    public long getCountPatients() {
+        return patientService.countPatients();
+    }
+
+    @GetMapping("/patients/{id:\\d+}")
     public Patient getPatientById(@PathVariable Long id) {
-        return patientRepository.findById(id).orElseThrow(() -> new NonexisitingEntityException(
-                String.format("User with ID='%s' does not exist.", id)
-        ));
+        return patientService.findPatientById(id);
     }
 
     @PostMapping("/patients")
     public Patient createPatient(@RequestBody Patient patient) {
-        return patientRepository.create(patient);
+        return patientService.createPatient(patient);
     }
 
-    @PutMapping("/patients/{id}")
-    public Optional<Patient> updatePatient(@PathVariable Long id, @RequestBody Patient updated) {
+    @PutMapping("/patients/{id:\\d+}")
+    public Patient updatePatient(@PathVariable Long id, @RequestBody Patient updated) {
         if (!id.equals(updated.getId())) {
             throw new InvalidEntityDataException(
                     String.format("Non-matching IDs in path '%s' and in body '%s'", id, updated.getId())
             );
         }
-        return patientRepository.update(updated);
+        return patientService.updatePatient(updated);
     }
 
-    @DeleteMapping("/patients/{id}")
-    public Optional<Patient> deletePatient(@PathVariable Long id) {
-        return patientRepository.deleteById(id);
+    @DeleteMapping("/patients/{id:\\d+}")
+    public Patient deletePatient(@PathVariable Long id) {
+        return patientService.deletePatientById(id);
     }
 
 

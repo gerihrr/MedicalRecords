@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Repository
 public class PrescriptionRepositoryInMemory extends RepositoryInMemory<Long, Prescription>
         implements PrescriptionRepository {
@@ -17,31 +19,12 @@ public class PrescriptionRepositoryInMemory extends RepositoryInMemory<Long, Pre
         super(idGenerator);
     }
 
-
     @Override
-    public List<Prescription> findByDoctorId(Long id) {
-        var allPrescriptions =  findAll();
-        var filtered = allPrescriptions.stream()
-                .filter(a -> a.getDoctorId().equals(id))
-                .toList();
-        return filtered;
-    }
-
-    @Override
-    public List<Prescription> findByPatientId(Long id) {
-        var allPrescriptions =  findAll();
-        var filtered = allPrescriptions.stream()
-                .filter(a -> a.getPatientId().equals(id))
-                .toList();
-        return filtered;
-    }
-
-    @Override
-    public List<Prescription> findByDate(LocalDate date) {
-        var allPrescriptions =  findAll();
-        var filtered = allPrescriptions.stream()
-                .filter(a -> a.getDate().equals(date))
-                .toList();
-        return filtered;
+    public List<Prescription> findByDoctorIdPatientIdDate(Long docId, Long patientId, LocalDate date) {
+        return findAll().stream()
+                .filter(prescription -> docId == null || docId.equals(prescription.getDoctorId()))
+                .filter(prescription -> patientId == null || patientId.equals(prescription.getPatientId()))
+                .filter(prescription -> date == null || date.equals(prescription.getDate()))
+                .collect(Collectors.toList());
     }
 }
