@@ -1,6 +1,7 @@
 package medrecords.dao;
 
 import medrecords.model.Doctor;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DoctorRepository extends Repository<Long, Doctor> {
+public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 }

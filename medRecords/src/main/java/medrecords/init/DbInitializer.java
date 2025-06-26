@@ -27,8 +27,6 @@ public class DbInitializer implements ApplicationRunner {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
-    @Autowired
-    private IdGenerator<Long> idGenerator;
 
 
     private static final List<Doctor> DOCTORS = List.of(
@@ -57,10 +55,10 @@ public class DbInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        DOCTORS.forEach(doctorRepository::create);
-        PATIENTS.forEach(patientRepository::create);
-        RECORDS.forEach(medicalRecordRepository::create);
-        PRESCRIPTIONS.forEach(prescriptionRepository::create);
-        APPOINTMENTS.forEach(appointmentRepository::create);
+        DOCTORS.forEach(doctorRepository::save);
+        PATIENTS.forEach(patientRepository::save);
+        RECORDS.forEach(medicalRecordRepository::save);
+        PRESCRIPTIONS.forEach(prescriptionRepository::save);
+        APPOINTMENTS.forEach(appointmentRepository::save);
     }
 }

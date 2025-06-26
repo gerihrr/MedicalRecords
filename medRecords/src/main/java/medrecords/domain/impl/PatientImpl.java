@@ -35,23 +35,20 @@ public class PatientImpl implements PatientService {
 
     @Override
     public Patient createPatient(Patient Patient) {
-        return PatientRepository.create(Patient);
+        return PatientRepository.save(Patient);
     }
 
     @Override
     public Patient updatePatient(Patient Patient) {
-        return PatientRepository.update(Patient).orElseThrow(() ->
-                new NonexisitingEntityException(
-                        String.format("Cannot update non-existing user '%s' with id Id=%d", Patient.getUsername(), Patient.getId())
-                ));
+        findPatientById(Patient.getId());
+        return PatientRepository.save(Patient);
     }
 
     @Override
     public Patient deletePatientById(Long id) {
-        return PatientRepository.deleteById(id).orElseThrow(() ->
-                new NonexisitingEntityException(
-                        String.format("Cannot update non-existing with id Id=%d", id)
-                ));
+        var old = findPatientById(id);
+        PatientRepository.deleteById(id);
+        return old;
     }
 
     @Override

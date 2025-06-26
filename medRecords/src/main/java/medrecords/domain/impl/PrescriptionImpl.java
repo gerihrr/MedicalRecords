@@ -38,23 +38,20 @@ public class PrescriptionImpl implements PrescriptionService {
 
     @Override
     public Prescription createPrescription(Prescription prescription) {
-        return prescriptionRepository.create(prescription);
+        return prescriptionRepository.save(prescription);
     }
 
     @Override
     public Prescription updatePrescription(Prescription prescription) {
-        return prescriptionRepository.update(prescription).orElseThrow(() ->
-                new NonexisitingEntityException(
-                        String.format("Cannot update non-existing prescription  id Id=%d",  prescription.getId())
-                ));
+        findPrescriptionById(prescription.getId());
+        return prescriptionRepository.save(prescription);
     }
 
     @Override
     public Prescription deletePrescriptionById(Long id) {
-        return prescriptionRepository.deleteById(id).orElseThrow(() ->
-                new NonexisitingEntityException(
-                        String.format("Cannot update non-existing prescription with id Id=%d", id)
-                ));
+        var old = findPrescriptionById(id);
+        prescriptionRepository.deleteById(id);
+        return old;
     }
 
     @Override
@@ -64,6 +61,6 @@ public class PrescriptionImpl implements PrescriptionService {
 
     @Override
     public List<Prescription> filterByDoctorPatientDate(Long docId, Long patId, LocalDate date) {
-        return prescriptionRepository.findByDoctorIdPatientIdDate(docId, patId, date);
+        return prescriptionRepository.findByDoctorIdAndPatientIdAndDate(docId, patId, date);
     }
 }

@@ -1,5 +1,8 @@
 package medrecords.model;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Doctor extends User{
     private String speciality;
     private String title;

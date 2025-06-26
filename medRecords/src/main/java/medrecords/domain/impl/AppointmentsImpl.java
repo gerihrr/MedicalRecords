@@ -35,23 +35,20 @@ public class AppointmentsImpl implements AppointmentsService {
 
     @Override
     public Appointment createAppointment(Appointment appointment) {
-        return appointmentRepository.create(appointment);
+        return appointmentRepository.save(appointment);
     }
 
     @Override
     public Appointment updateAppointment(Appointment appointment) {
-        return appointmentRepository.update(appointment).orElseThrow(() ->
-                new NonexisitingEntityException(
-                        String.format("Cannot update non-existing appointment  id Id=%d",  appointment.getId())
-                ));
+        findAppointmentById(appointment.getId());
+        return appointmentRepository.save(appointment);
     }
 
     @Override
     public Appointment deleteAppointmentById(Long id) {
-        return appointmentRepository.deleteById(id).orElseThrow(() ->
-                new NonexisitingEntityException(
-                        String.format("Cannot update non-existing appointment with id Id=%d", id)
-                ));
+        var old = findAppointmentById(id);
+        appointmentRepository.deleteById(id);
+        return old;
     }
 
     @Override
@@ -61,6 +58,6 @@ public class AppointmentsImpl implements AppointmentsService {
 
     @Override
     public List<Appointment> filterByDoctorPatientDate(Long docId, Long patId, LocalDate date) {
-        return appointmentRepository.findByDoctorIdPatientIdDate(docId, patId, date);
+        return appointmentRepository.findByDoctorIdAndPatientIdAndDate(docId, patId, date);
     }
 }

@@ -1,7 +1,10 @@
 package medrecords.model;
 
+import jakarta.persistence.Entity;
+
 import java.time.LocalDate;
 
+@Entity
 public class Patient extends User{
     private String address;
     private LocalDate birthDate;

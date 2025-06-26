@@ -38,23 +38,20 @@ public class MedicalRecordsImpl implements MedicalRecordsService {
 
     @Override
     public MedicalRecord createMedicalRecord(MedicalRecord medicalRecord) {
-        return medicalRecordRepository.create(medicalRecord);
+        return medicalRecordRepository.save(medicalRecord);
     }
 
     @Override
     public MedicalRecord updateMedicalRecord(MedicalRecord medicalRecord) {
-        return medicalRecordRepository.update(medicalRecord).orElseThrow(() ->
-                new NonexisitingEntityException(
-                        String.format("Cannot update non-existing medicalRecord  id Id=%d",  medicalRecord.getId())
-                ));
+        findMedicalRecordById(medicalRecord.getId());
+        return medicalRecordRepository.save(medicalRecord);
     }
 
     @Override
     public MedicalRecord deleteMedicalRecordById(Long id) {
-        return medicalRecordRepository.deleteById(id).orElseThrow(() ->
-                new NonexisitingEntityException(
-                        String.format("Cannot update non-existing medicalRecord with id Id=%d", id)
-                ));
+        var old = findMedicalRecordById(id);
+        medicalRecordRepository.deleteById(id);
+        return old;
     }
 
     @Override
@@ -64,7 +61,7 @@ public class MedicalRecordsImpl implements MedicalRecordsService {
 
     @Override
     public List<MedicalRecord> filterByDoctorPatientDate(Long docId, Long patId, LocalDate date) {
-        return medicalRecordRepository.findByDoctorIdPatientIdDate(docId, patId, date);
+        return medicalRecordRepository.findByDoctorIdAndPatientIdAndDate(docId, patId, date);
     }
 }
 

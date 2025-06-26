@@ -34,23 +34,20 @@ private DoctorRepository doctorRepository;
 
     @Override
     public Doctor createDoctor(Doctor doctor) {
-        return doctorRepository.create(doctor);
+        return doctorRepository.save(doctor);
     }
 
     @Override
     public Doctor updateDoctor(Doctor doctor) {
-         return doctorRepository.update(doctor).orElseThrow(() ->
-                new NonexisitingEntityException(
-                        String.format("Cannot update non-existing user '%s' with id Id=%d", doctor.getUsername(), doctor.getId())
-                ));
+        doctorRepository.findById(doctor.getId());
+         return doctorRepository.save(doctor);
     }
 
     @Override
     public Doctor deleteDoctorById(Long id) {
-        return doctorRepository.deleteById(id).orElseThrow(() ->
-                new NonexisitingEntityException(
-                        String.format("Cannot update non-existing with id Id=%d", id)
-                ));
+        var old = findDoctorById(id);
+        doctorRepository.deleteById(id);
+        return old;
     }
 
     @Override
