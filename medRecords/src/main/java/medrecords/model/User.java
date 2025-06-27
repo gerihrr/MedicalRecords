@@ -1,9 +1,12 @@
 package medrecords.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+
+import java.util.Objects;
 
 @MappedSuperclass
 public class User implements Identifiable<Long>{
@@ -11,6 +14,7 @@ public class User implements Identifiable<Long>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
+    @JsonIgnore
     private String password;
     private String firstName;
     private String lastName;
@@ -79,5 +83,17 @@ public class User implements Identifiable<Long>{
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof User user)) return false;
+
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

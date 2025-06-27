@@ -11,6 +11,7 @@ public interface DoctorService {
     Doctor createDoctor(Doctor doctor);
     Doctor updateDoctor(Doctor doctor);
     Doctor deleteDoctorById(Long id);
+    List <Doctor> findDoctorBySpeciality(String speciality);
     long countDoctors();
 
 

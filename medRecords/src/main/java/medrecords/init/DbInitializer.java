@@ -40,25 +40,25 @@ public class DbInitializer implements ApplicationRunner {
     );
 
     private static final List<MedicalRecord> RECORDS = List.of(
-            new MedicalRecord(LocalDate.of(2025,06,23), 1L, 1L, "cardiological problem", "medicine"),
-            new MedicalRecord(LocalDate.of(2025, 06, 22), 2L, 1L, "flu", "medicine")
+            new MedicalRecord(LocalDate.of(2025,06,23),  "cardiological problem", "medicine"),
+            new MedicalRecord(LocalDate.of(2025, 06, 22),  "flu", "medicine")
     );
 
     private static final List<Appointment> APPOINTMENTS = List.of(
-            new Appointment( LocalDate.of(2025, 06, 23), "13:00", 1L, 1L)
+            new Appointment( LocalDate.of(2025, 06, 23), "13:00")
     );
 
     private static final List<Prescription> PRESCRIPTIONS = List.of(
-            new Prescription( "Mixodil", "1 week", LocalDate.of(2025, 06, 22), 1L, 1L)
+            new Prescription( "Mixodil", "1 week", LocalDate.of(2025, 06, 22))
     );
 
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        DOCTORS.forEach(doctorRepository::save);
-        PATIENTS.forEach(patientRepository::save);
-        RECORDS.forEach(medicalRecordRepository::save);
-        PRESCRIPTIONS.forEach(prescriptionRepository::save);
-        APPOINTMENTS.forEach(appointmentRepository::save);
+//        DOCTORS.forEach(doctorRepository::save);
+//        PATIENTS.forEach(patientRepository::save);
+//        RECORDS.forEach(medicalRecordRepository::save);
+//        PRESCRIPTIONS.forEach(prescriptionRepository::save);
+//        APPOINTMENTS.forEach(appointmentRepository::save);
     }
 }

@@ -50,6 +50,12 @@ public class UsersRestController {
     return doctorService.findDoctorById(id);
     }
 
+    @GetMapping("doctors/speciality/{speciality}")
+    public List<Doctor> getDoctorBySpeciality(@PathVariable String speciality) {
+
+        return doctorService.findDoctorBySpeciality(speciality);
+    }
+
     @PostMapping("/doctors")
     public Doctor createDoctor(@RequestBody Doctor doctor) {
         return doctorService.createDoctor(doctor);

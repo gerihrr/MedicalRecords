@@ -1,11 +1,9 @@
 package medrecords.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class Prescription implements Identifiable<Long>{
@@ -15,24 +13,39 @@ public class Prescription implements Identifiable<Long>{
     private String description;
     private String duraton;
     private LocalDate date;
-    private Long doctorId;
-    private Long patientId;
+    @ManyToOne
+    private Patient patient;
+    @ManyToOne
+    private Doctor doctor;
 
     public Prescription() {
     }
 
-    public Prescription(String description, String duraton, LocalDate date, Long doctorId, Long patientId) {
-        this();
+    public Prescription(Long id) {
+        this.id = id;
+    }
+
+    public Prescription(String description, String duraton, LocalDate date) {
         this.description = description;
         this.duraton = duraton;
         this.date = date;
-        this.doctorId = doctorId;
-        this.patientId = patientId;
     }
 
-    public Prescription(Long id, String description, String duraton, LocalDate date, Long doctorId, Long patientId) {
-        this(description, duraton, date, doctorId, patientId);
+    public Prescription(String description, String duraton, LocalDate date, Patient patient, Doctor doctor) {
+        this.description = description;
+        this.duraton = duraton;
+        this.date = date;
+        this.patient = patient;
+        this.doctor = doctor;
+    }
+
+    public Prescription(Long id, String description, String duraton, LocalDate date, Patient patient, Doctor doctor) {
         this.id = id;
+        this.description = description;
+        this.duraton = duraton;
+        this.date = date;
+        this.patient = patient;
+        this.doctor = doctor;
     }
 
     @Override
@@ -69,19 +82,31 @@ public class Prescription implements Identifiable<Long>{
         this.date = date;
     }
 
-    public Long getDoctorId() {
-        return doctorId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
-    public Long getPatientId() {
-        return patientId;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Prescription that)) return false;
+
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

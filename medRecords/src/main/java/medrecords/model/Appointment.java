@@ -1,11 +1,9 @@
 package medrecords.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class Appointment implements Identifiable<Long>{
@@ -14,29 +12,36 @@ public class Appointment implements Identifiable<Long>{
     private Long id;
     private LocalDate date;
     private String hour;
-    private Long patientId;
-    private Long doctorId;
+    @ManyToOne
+    private Patient patient;
+    @ManyToOne
+    private Doctor doctor;
 
     public Appointment() {
     }
 
-    public Appointment(LocalDate date, String hour, Long patientId, Long doctorId) {
-        this();
-        this.date = date;
-        this.hour = hour;
-        this.patientId = patientId;
-        this.doctorId = doctorId;
-    }
-
-    public Appointment(Long id, LocalDate date, String hour, Long patientId, Long doctorId) {
-        this(date, hour, patientId, doctorId);
+    public Appointment(Long id) {
         this.id = id;
     }
 
+    public Appointment(LocalDate date, String hour, Patient patient, Doctor doctor) {
+        this.date = date;
+        this.hour = hour;
+        this.patient = patient;
+        this.doctor = doctor;
+    }
+
+    public Appointment(LocalDate date, String hour) {
+        this.date = date;
+        this.hour = hour;
+    }
+
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -57,19 +62,31 @@ public class Appointment implements Identifiable<Long>{
         this.hour = hour;
     }
 
-    public Long getPatientId() {
-        return patientId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
-    public Long getDoctorId() {
-        return doctorId;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Appointment that)) return false;
+
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

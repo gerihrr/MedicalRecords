@@ -1,44 +1,51 @@
 package medrecords.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
-public class MedicalRecord implements  Identifiable<Long>{
+public class MedicalRecord implements  Identifiable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
-    private Long patientId;
-    private Long doctorId;
     private String description;
     private String treatment;
+    @ManyToOne
+    private Patient patient;
+    @ManyToOne
+    private Doctor doctor;
 
     public MedicalRecord() {
     }
 
-    public MedicalRecord(LocalDate date, Long patientId, Long doctorId, String description, String treatment) {
-        this();
+    public MedicalRecord(Long id) {
+        this.id = id;
+    }
+
+    public MedicalRecord(LocalDate date, String description, String treatment) {
         this.date = date;
-        this.patientId = patientId;
-        this.doctorId = doctorId;
         this.description = description;
         this.treatment = treatment;
     }
 
-    public MedicalRecord(Long id, LocalDate date, Long patientId, Long doctorId, String description, String treatment) {
-        this(date, patientId, doctorId, description, treatment);
-        this.id = id;
+    public MedicalRecord(LocalDate date, String description, String treatment, Patient patient, Doctor doctor) {
+        this.date = date;
+        this.description = description;
+        this.treatment = treatment;
+        this.patient = patient;
+        this.doctor = doctor;
     }
 
+
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -49,22 +56,6 @@ public class MedicalRecord implements  Identifiable<Long>{
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public Long getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
-    }
-
-    public Long getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
     }
 
     public String getDescription() {
@@ -82,4 +73,33 @@ public class MedicalRecord implements  Identifiable<Long>{
     public void setTreatment(String treatment) {
         this.treatment = treatment;
     }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof MedicalRecord that)) return false;
+
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
+
